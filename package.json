@@ -9,6 +9,10 @@
     "lint": "next lint"
   },
   "dependencies": {
+    "grapesjs": "^0.18.4",
+    "grapesjs-preset-newsletter": "^0.2.21",
+    "grapesjs-preset-webpage": "^0.1.11",
+    "grapesjs-react": "^4.0.1-alpha",
     "next": "12.1.6",
     "react": "18.1.0",
     "react-dom": "18.1.0"
