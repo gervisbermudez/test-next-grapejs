@@ -69,3 +69,12 @@ div#blocks {
   width: 13%;
   height: calc(100vh - 40px);
 }
+
+.properties-container ul {
+  text-align: left;
+  padding: 0px;
+}
+
+.properties-container ul li {
+  padding: 5px 0px;
+}
