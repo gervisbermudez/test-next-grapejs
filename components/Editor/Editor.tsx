@@ -1,8 +1,10 @@
-import GrapesJS, { Editor as EditorType } from "grapesjs";
-import { Children, useEffect, useState } from "react";
-import EditorBlocks, { myPlugin } from "../constants/EditorBlocks";
+import GrapesJS from "grapesjs";
+import { useEffect, useState } from "react";
+import EditorBlocks from "../../constants/EditorBlocks";
+import { createElement, getAttrElementType } from "../../utils";
+import { plugins } from "./EditorComponents";
 
-export default function Editor({ children }: any) {
+export default function Editor() {
   const [editor, setEditor] = useState<GrapesJS.Editor>();
   const [editorPanelManager, setEditorPanelManager] = useState<any>();
   const [isInitEditor, setIsInitEditor] = useState(false);
@@ -11,7 +13,7 @@ export default function Editor({ children }: any) {
     if (!isInitEditor) {
       const editorInstance = GrapesJS.init({
         container: "#gjs",
-        plugins: [myPlugin],
+        plugins: [...plugins],
         // Disable the storage manager for the moment
         storageManager: false,
         fromElement: true,
@@ -125,14 +127,17 @@ export default function Editor({ children }: any) {
           ],
         },
       });
+
       editorInstance.Panels.addPanel({
         id: "properties-panel",
         el: ".properties-panel-container",
       });
+
       editorInstance.Panels.addPanel({
         id: "panel-top",
         el: ".panel__top",
       });
+
       editorInstance.Panels.addPanel({
         id: "basic-actions",
         el: ".panel__basic-actions",
@@ -183,26 +188,46 @@ export default function Editor({ children }: any) {
         lmEl.style.display = display;
       };
 
+
+
       editorInstance.on("component:selected", (e) => {
-          // @ts-expect-error
-        const { attributes } = e.attributes;
-        console.log({attributes});
-        const lmEl = editorInstance
+        console.log('selected component: ', e);
+
         // @ts-expect-error
-        .getContainer()
-        .closest(".editor-row")
-        .querySelector(".properties-container");
+        const { attributes, attributesType } = e.attributes;
+        console.log({ attributes, attributesType });
+        const lmEl = editorInstance
+          // @ts-expect-error
+          .getContainer()
+          .closest(".editor-row")
+          .querySelector(".properties-container");
         lmEl.innerHTML = ``;
-        let innerHTML = "";
-        innerHTML += `<ul>`;
-        for (const key in attributes) {
-          if (Object.prototype.hasOwnProperty.call(attributes, key)) {
-            const element = attributes[key];
-            console.log({element});
-            innerHTML += `<li>${key}: ${element}</li>`;
+
+
+        for (const attributeName in attributes) {
+          if (Object.prototype.hasOwnProperty.call(attributes, attributeName)) {
+            const attributeValue = attributes[attributeName];
+            const inputHandlerElement = getAttrElementType({ attributesType: attributesType[attributeName], attributeName, attributeValue, attributes, component: e })
+
+            const divElement = createElement('div');
+            divElement.innerHTML = `
+            <div className="gjs-sm-property gjs-sm-base">
+                <div class="gjs-sm-label" data-sm-label="">
+                <span class="gjs-sm-icon " title="">
+                  ${attributeName}
+                </span>
+                <div class="gjs-sm-clear" style="display: none" data-clear-style=""><svg viewBox="0 0 24 24"><path fill="currentColor" d="M19 6.41L17.59 5 12 10.59 6.41 5 5 6.41 10.59 12 5 17.59 6.41 19 12 13.41 17.59 19 19 17.59 13.41 12 19 6.41z"></path></svg></div>
+              </div>
+                <div class="gjs-fields" data-sm-fields="">
+                <div class="gjs-field"></div>
+              </div></div>`;
+
+            divElement.querySelector('.gjs-field').appendChild(inputHandlerElement);
+
+            lmEl.appendChild(divElement);
           }
         }
-        lmEl.innerHTML = innerHTML;
+
         console.log("component:selected");
       });
 
@@ -215,6 +240,7 @@ export default function Editor({ children }: any) {
           chageDisplayPropertiesPanelContainer("none");
         },
       });
+
       editorInstance.Commands.add("show-layers", {
         run: () => {
           const lmEl = getLayersEl(getRowEl());
@@ -226,6 +252,7 @@ export default function Editor({ children }: any) {
           lmEl.style.display = "none";
         },
       });
+
       editorInstance.Commands.add("show-styles", {
         run: () => {
           const smEl = getStyleEl(getRowEl());
@@ -237,6 +264,18 @@ export default function Editor({ children }: any) {
           smEl.style.display = "none";
         },
       });
+
+      /* const getAttributeElementHandler = ({ component, attributeName, attributeValue }) => {
+        switch (key) {
+          case value:
+            
+            break;
+        
+          default:
+            break;
+        }
+      }*/
+
       setEditor(editorInstance);
       setEditorPanelManager(editorInstance.Panels);
       setIsInitEditor(true);
@@ -259,7 +298,7 @@ export default function Editor({ children }: any) {
         <div className="panel__right">
           <div className="properties-panel-container">
             <span>Panel de Propiedades</span>
-            <div className="properties-container"></div>
+            <div className="properties-container gjs-sm-properties"></div>
           </div>
           <div className="layers-container"></div>
           <div className="styles-container"></div>

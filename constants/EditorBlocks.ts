@@ -1,29 +1,3 @@
-export const myPlugin = function (editor) {
-  editor.DomComponents.addType("my-first-block", {
-    // Make the editor understand when to bind `my-input-type`
-    isComponent: (el) => el.tagName === "DIV",
-
-    // Model definition
-    model: {
-      // Default properties
-      defaults: {
-        tagName: "div",
-        attributes: {
-          // Default attributes
-          type: "text",
-          name: "default-name",
-          placeholder: "Insert text here",
-          ['data-valores-formularios']: "valor-de-la-propiedad"
-        },
-        components: `
-      <h1>Header test</h1>
-      <p>Paragraph test</p>
-    `,
-      },
-    },
-  });
-};
-
 const EditorBlocks = [
   {
     id: "listado",
