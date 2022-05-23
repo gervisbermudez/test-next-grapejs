@@ -78,3 +78,31 @@ div#blocks {
 .properties-container ul li {
   padding: 5px 0px;
 }
+
+.properties-container {
+  display: flex;
+  flex-wrap: wrap;
+  text-align: left;
+}
+
+.propertie-container {
+  width: 100%;
+  margin: 0 0 10px;
+}
+
+.element-handler-container-label {
+  margin: 0 0 5px;
+}
+
+.element-handler input,
+.element-handler select,
+.element-handler textarea {
+  color: inherit;
+  border: none;
+  background-color: #363636;
+  box-sizing: border-box;
+  width: 100%;
+  position: relative;
+  padding: 5px;
+  z-index: 1;
+}

@@ -188,8 +188,6 @@ export default function Editor() {
         lmEl.style.display = display;
       };
 
-
-
       editorInstance.on("component:selected", (e) => {
         console.log('selected component: ', e);
 
@@ -203,7 +201,6 @@ export default function Editor() {
           .querySelector(".properties-container");
         lmEl.innerHTML = ``;
 
-
         for (const attributeName in attributes) {
           if (Object.prototype.hasOwnProperty.call(attributes, attributeName)) {
             const attributeValue = attributes[attributeName];
@@ -211,18 +208,20 @@ export default function Editor() {
 
             const divElement = createElement('div');
             divElement.innerHTML = `
-            <div className="gjs-sm-property gjs-sm-base">
-                <div class="gjs-sm-label" data-sm-label="">
-                <span class="gjs-sm-icon " title="">
-                  ${attributeName}
-                </span>
-                <div class="gjs-sm-clear" style="display: none" data-clear-style=""><svg viewBox="0 0 24 24"><path fill="currentColor" d="M19 6.41L17.59 5 12 10.59 6.41 5 5 6.41 10.59 12 5 17.59 6.41 19 12 13.41 17.59 19 19 17.59 13.41 12 19 6.41z"></path></svg></div>
-              </div>
-                <div class="gjs-fields" data-sm-fields="">
-                <div class="gjs-field"></div>
-              </div></div>`;
+              <div className="element-handler-main-container">
+                <div class="element-handler-container-label">
+                  <span class="" title="${attributeName}">
+                    ${attributeName}
+                  </span>
+                </div>
+                <div class="element-handler-container">
+                  <div class="element-handler"></div>
+                </div>
+              </div>`;
 
-            divElement.querySelector('.gjs-field').appendChild(inputHandlerElement);
+            divElement.setAttribute("class", 'propertie-container')
+
+            divElement.querySelector('.element-handler').appendChild(inputHandlerElement);
 
             lmEl.appendChild(divElement);
           }
@@ -298,7 +297,7 @@ export default function Editor() {
         <div className="panel__right">
           <div className="properties-panel-container">
             <span>Panel de Propiedades</span>
-            <div className="properties-container gjs-sm-properties"></div>
+            <div className="properties-container"></div>
           </div>
           <div className="layers-container"></div>
           <div className="styles-container"></div>

@@ -7,11 +7,26 @@ export const createElement = (
   for (const key in elementAttr) {
     if (Object.prototype.hasOwnProperty.call(elementAttr, key)) {
       const value = elementAttr[key];
-      if (key !== "events") {
+      if (key === "children") {
+        let arrayChildrenNodes: Array<HTMLElement> = [];
+        value.forEach((element) => {
+          arrayChildrenNodes.push(
+            createElement(
+              element.elementType,
+              element.elementAttr,
+              element.innerText
+            )
+          );
+        });
+        arrayChildrenNodes.forEach((element) => {
+          elementDom.append(element);
+        });
+      } else if (key !== "events") {
         elementDom.setAttribute(key, value);
       }
     }
   }
+
   if (elementAttr["events"]) {
     for (const eventName in elementAttr["events"]) {
       if (
@@ -23,12 +38,15 @@ export const createElement = (
     }
   }
 
-  if(innerText !== "") elementDom.innerText = innerText;
+  if (innerText !== "") elementDom.innerText = innerText;
 
   return elementDom;
 };
 
-export const setAttributesToElementType = (inputHandlerElement, attributes) : HTMLElement  => {
+export const setAttributesToElementType = (
+  inputHandlerElement,
+  attributes
+): HTMLElement => {
   for (const attr in attributes) {
     if (Object.prototype.hasOwnProperty.call(attributes, attr)) {
       const value = attributes[attr];
@@ -37,67 +55,128 @@ export const setAttributesToElementType = (inputHandlerElement, attributes) : HT
   }
 
   return inputHandlerElement;
-}
+};
 
-export const getAttrElementType = ({ attributes, attributesType, attributeName, attributeValue, component}) : HTMLElement => {
+export const getAttrElementType = ({
+  attributes,
+  attributesType,
+  attributeName,
+  attributeValue,
+  component,
+}): HTMLElement => {
   //Default input type="text"
-  let inputHandlerElement = (createElement('input', {
-    class: 'attr-input',
+  let inputHandlerElement = createElement("input", {
+    class: "attr-input-text",
     type: "text",
     name: attributeName,
     value: attributeValue,
     events: {
-      'change': ({ target }) => {
+      change: ({ target }) => {
         component.set({
           attributes: {
             ...attributes,
-            [attributeName]: target.value
-          }
+            [attributeName]: target.value,
+          },
         });
-      }
-    }
-  }));
+      },
+    },
+  });
 
-  if(!attributesType){
+  if (!attributesType) {
     return inputHandlerElement;
   }
 
-  if(attributesType.attributes) inputHandlerElement = setAttributesToElementType(inputHandlerElement, attributesType.attributes);
+  if (attributesType.attributes)
+    inputHandlerElement = setAttributesToElementType(
+      inputHandlerElement,
+      attributesType.attributes
+    );
 
   switch (attributesType.type) {
-    case 'string':
+    case "string":
       return inputHandlerElement;
-    case 'number':
-      inputHandlerElement.setAttribute('type', 'number');
+    case "number":
+      inputHandlerElement.setAttribute("class", "attr-input-number");
+      inputHandlerElement.setAttribute("type", "number");
       return inputHandlerElement;
-    case"select": 
-    inputHandlerElement = (createElement('select', {
-      class: 'attr-input',
-      name: attributeName,
-      value: attributeValue,
-      events: {
-        'change': ({ target }) => {
-          component.set({
-            attributes: {
-              ...attributes,
-              [attributeName]: target.value
-            }
-          });
-        }
+    case "select":
+      inputHandlerElement.setAttribute("class", "attr-input-select");
+      inputHandlerElement = createElement("select", {
+        class: "attr-input",
+        name: attributeName,
+        value: attributeValue,
+        events: {
+          change: ({ target }) => {
+            component.set({
+              attributes: {
+                ...attributes,
+                [attributeName]: target.value,
+              },
+            });
+          },
+        },
+      });
+      {
+        let { options } = attributesType;
+        options.forEach((obj) => {
+          let option = createElement(
+            "option",
+            {
+              value: obj.value,
+            },
+            obj.label
+          );
+          inputHandlerElement.append(option);
+        });
       }
-    }));
-    let {options} = attributesType
-    options.forEach(obj => {
-      let option = createElement('option', {
-        value: obj.value
-      },
-        obj.label
-      );
-      inputHandlerElement.append(option);
-    });
-    return inputHandlerElement;
+      return inputHandlerElement;
+    case "radio":
+      inputHandlerElement = createElement("div", {
+        class: "attr-input-radio input-radio-container",
+        name: attributeName,
+        value: attributeValue,
+      });
+
+      {
+        let { options } = attributesType;
+        options.forEach((obj) => {
+          let option = createElement("div", {
+            children: [
+              {
+                elementType: "input",
+                elementAttr: {
+                  type: "radio",
+                  name: attributeName,
+                  value: obj.value,
+                  id: obj.value,
+                  events: {
+                    change: ({ target }) => {
+                      component.set({
+                        attributes: {
+                          ...attributes,
+                          [attributeName]: target.value,
+                        },
+                      });
+                    },
+                  },
+                },
+              },
+              {
+                elementType: "label",
+                elementAttr: {
+                  for: obj.value,
+                },
+                innerText: obj.label,
+              },
+            ],
+          });
+
+          inputHandlerElement.append(option);
+        });
+      }
+      return inputHandlerElement;
 
     default:
       return inputHandlerElement;
   }
-}
+};

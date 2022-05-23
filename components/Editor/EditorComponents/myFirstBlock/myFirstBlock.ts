@@ -1,11 +1,11 @@
 import { validateNumber, validateString } from "../validators";
 
 type attributesType = {
-  type: string,
-  isRequired: boolean,
-  validate: Function
-  categorie?: string 
-}
+  type: string;
+  isRequired: boolean;
+  validate: Function;
+  categorie?: string;
+};
 
 export const myFirstBlock = function (editor) {
   editor.DomComponents.addType("my-first-block", {
@@ -19,7 +19,7 @@ export const myFirstBlock = function (editor) {
           type: {
             type: "string",
             isRequired: true,
-            validate: validateString
+            validate: validateString,
           },
           name: {
             type: "select",
@@ -28,22 +28,45 @@ export const myFirstBlock = function (editor) {
             options: [
               {
                 label: "Gervis B.",
-                value: "gervis"
+                value: "gervis",
               },
               {
                 label: "Nico F.",
-                value: "nico"
+                value: "nico",
               },
               {
                 label: "Juan R.",
-                value: "juan"
-              }
-            ]
+                value: "juan",
+              },
+            ],
           },
           placeholder: {
             type: "string",
             isRequired: false,
-            validate: validateString
+            validate: validateString,
+          },
+          color: {
+            type: "radio",
+            isRequired: false,
+            validate: () => {},
+            options: [
+              {
+                value: "red",
+                label: "Red",
+              },
+              {
+                value: "blue",
+                label: "Blue",
+              },
+              {
+                value: "yellow",
+                label: "Yellow",
+              },
+              {
+                value: "green",
+                label: "Gren",
+              },
+            ],
           },
           min: {
             type: "number",
@@ -51,10 +74,9 @@ export const myFirstBlock = function (editor) {
             validate: validateNumber,
             attributes: {
               min: "0",
-              max: "10"
-            }
+              max: "10",
+            },
           },
-          
         },
         tagName: "div",
         attributes: {
@@ -64,7 +86,8 @@ export const myFirstBlock = function (editor) {
           placeholder: "Insert text here",
           ["data-valores-formularios"]: "valor-de-la-propiedad",
           ["data-valores-nico"]: "valor-de-la-propiedad",
-          min: "0"
+          min: "0",
+          color: "green",
         },
         components: `
               <h1>Header test</h1>
