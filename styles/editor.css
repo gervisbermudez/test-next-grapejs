@@ -94,14 +94,15 @@ div#blocks {
   margin: 0 0 5px;
 }
 
-.element-handler input,
+.element-handler input[type="text"],
+.element-handler input[type="number"],
 .element-handler select,
 .element-handler textarea {
   color: inherit;
   border: none;
   background-color: #363636;
   box-sizing: border-box;
-  width: 100%;
+  width: calc(100% - 10px);
   position: relative;
   padding: 5px;
   z-index: 1;

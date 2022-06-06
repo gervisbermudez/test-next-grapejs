@@ -24,7 +24,14 @@ type grapesjsModelType = {
 type pageJsonType = {
   type: string;
   attributes?: object;
-  components?: Array<pageJsonType>;
+  components?: Array<pageJsonType> | string;
   tagName?: string;
   content?: string;
+};
+
+type attributesType = {
+  type: string;
+  isRequired: boolean;
+  validate: Function;
+  categorie?: string;
 };

@@ -1,3 +1,3 @@
-import { myFirstBlock } from "./myFirstBlock/myFirstBlock";
+import { mstatListado } from "./mstatListado/";
 
-export const plugins = [myFirstBlock];
+export const plugins = [mstatListado];

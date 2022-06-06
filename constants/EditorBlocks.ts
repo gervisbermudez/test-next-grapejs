@@ -3,7 +3,7 @@ const EditorBlocks = [
     id: "listado",
     label: "Listado",
     content: {
-      type: "my-first-block",
+      type: "mstat-listado",
     },
     category: "Basic",
   },

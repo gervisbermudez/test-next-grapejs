@@ -4,6 +4,8 @@ export const createElement = (
   innerText: string = ""
 ): HTMLElement => {
   const elementDom = document.createElement(elementType);
+  if (innerText !== "") elementDom.innerText = innerText;
+
   for (const key in elementAttr) {
     if (Object.prototype.hasOwnProperty.call(elementAttr, key)) {
       const value = elementAttr[key];
@@ -37,8 +39,6 @@ export const createElement = (
       }
     }
   }
-
-  if (innerText !== "") elementDom.innerText = innerText;
 
   return elementDom;
 };
@@ -98,6 +98,40 @@ export const getAttrElementType = ({
     case "number":
       inputHandlerElement.setAttribute("class", "attr-input-number");
       inputHandlerElement.setAttribute("type", "number");
+      return inputHandlerElement;
+    //Booleans definitios for inputs values as true | false
+    case "boolean":
+      inputHandlerElement = createElement(
+        "label",
+        {
+          for: attributeName,
+          children: [
+            {
+              elementType: "input",
+              elementAttr: {
+                class: "attr-input-boolean",
+                type: "checkbox",
+                name: attributeName,
+                value: attributeValue,
+                checked: attributeValue === 'true' ? "checked" : false,
+                id: attributeName,
+                events: {
+                  change: ({ target }) => {
+                    console.log("change checkbox", target.checked);
+                    component.set({
+                      attributes: {
+                        ...attributes,
+                        [attributeName]: target.checked ? "true" : "false",
+                      },
+                    });
+                  },
+                },
+              },
+            },
+          ],
+        }
+      );
+
       return inputHandlerElement;
     case "select":
       inputHandlerElement.setAttribute("class", "attr-input-select");
