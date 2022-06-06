@@ -4,7 +4,12 @@ import EditorBlocks from "../../constants/EditorBlocks";
 import { createElement, getAttrElementType } from "../../utils";
 import { plugins } from "./EditorComponents";
 
-export default function Editor() {
+type EditorTypeProps = {
+  html?: string;
+  components?: Array<pageJsonType>;
+}
+
+export default function Editor({ html, components }: EditorTypeProps) {
   const [editor, setEditor] = useState<GrapesJS.Editor>();
   const [editorPanelManager, setEditorPanelManager] = useState<any>();
   const [isInitEditor, setIsInitEditor] = useState(false);
@@ -127,6 +132,11 @@ export default function Editor() {
           ],
         },
       });
+
+      // @ts-expect-error
+      if (html) editorInstance.setComponents(html);
+      // @ts-expect-error
+      if (components) editorInstance.setComponents(components);
 
       editorInstance.Panels.addPanel({
         id: "properties-panel",
@@ -280,8 +290,6 @@ export default function Editor() {
       setIsInitEditor(true);
     }
   }, []);
-
-  console.log({ editor });
 
   return (
     <div className="editor-main-container">
