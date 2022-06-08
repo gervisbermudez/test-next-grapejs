@@ -9,6 +9,7 @@ const mstatListado = function (editor) {
     model: {
       // Default properties
       defaults: {
+        droppable: false, 
         attributesType: {
           /* type: {
             type: "string",
@@ -76,6 +77,12 @@ const mstatListado = function (editor) {
             attributes: {
               readonly: "readonly",
             },
+          },
+          class: {
+            type: "string",
+            attributes: { 
+              readonly: "readonly",
+            }
           },
           ['data-marcar_fila']: { 
             type: 'boolean'
